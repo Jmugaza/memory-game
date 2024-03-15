@@ -1,0 +1,47 @@
+*{
+    box-sizing: border-box;
+}
+
+body{
+    margin: 0;
+    font-family: 'Times New Roman', Times, serif;
+    background-color: aliceblue;
+    color: #000000;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+header{
+    margin-top: 20px;
+}
+
+#board{
+    width: 469px;
+    height: 432px;
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    grid-gap: 10px;
+    text-align: center;
+    padding: 10px;
+}
+
+#board > div {
+    background-repeat: no-repeat;
+    background-color: #E3D01D ;
+    background-size: cover;
+    width: 82px;
+    height: 90px;
+    position: relative;
+    z-index: 1;
+}
+
+button{
+    margin-top: 8px;
+    width: 115px;
+    height: 60px;
+    background-color: #4644d3;
+    font-size: 16px;
+    border-radius: 10px;
+}
