@@ -16,8 +16,8 @@ const CARD_BACK = "images/question.png";
 const GAME_DURATION = 80; // seconds
 
 /*----- state variables -----*/
-let board; 
-let firstCard; 
+let board;
+let firstCard;
 let secondCard;
 let ignoreClick;
 let gamerOver;
@@ -30,9 +30,8 @@ const timerEl = document.getElementById("timer");
 const resetBtn = document.getElementById("reset");
 
 /*----- event listeners -----*/
-boardEl.addEventListener("click", handleClick)
-resetBtn.addEventListener("click", init)
-
+boardEl.addEventListener("click", handleClick);
+resetBtn.addEventListener("click", init);
 
 /*----- functions -----*/
 
@@ -43,16 +42,16 @@ function init() {
   secondCard = null;
   ignoreClick = false;
   gamerOver = false;
-  messageEl.innerHTML = '';
+  messageEl.innerHTML = "";
   startTimer();
   render();
 }
 
 function ShuffledCards() {
-  let tempCards = []
-  let cards = []
-  for (let card of SOURCE_CARDS){
-    tempCards.push({...card}, {...card})
+  let tempCards = [];
+  let cards = [];
+  for (let card of SOURCE_CARDS) {
+    tempCards.push({ ...card }, { ...card });
   }
   while (tempCards.length) {
     let randomIndex = Math.floor(Math.random() * tempCards.length);
@@ -62,7 +61,7 @@ function ShuffledCards() {
   return cards;
 }
 
-function handleClick(e){
+function handleClick(e) {
   const cardIdx = parseInt(e.target.id);
   if (gamerOver || isNaN(cardIdx) || ignoreClick) return;
 
@@ -103,5 +102,20 @@ function handleClick(e){
       render();
     }, 1500); // Adjust this delay as needed
   }
+}
+
+function renderBoard() {
+  board.forEach((card, index) => {
+    const cardEl = document.getElementById(index);
+    cardEl.src = card.img;
+    const src =
+      card.matched || card === firstCard || secondCard ? card.img : CARD_BACK;
+    cardEl.src = src;
+  });
+}
+
+function checkForWin() {
+  let matchedCards = board.filter((card) => card.matched);
+  return matchedCards.length === board.length;
 }
 
