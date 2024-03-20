@@ -4,10 +4,10 @@ const SOURCE_CARDS = [
   { img: "images/basketball.png", matched: false },
   { img: "images/bowlingball.png", matched: false },
   { img: "images/dumbbell.png", matched: false },
-  { img: "images/football.png", matched: false },
-  { img: "images/futbol.png", matched: false },
-  { img: "images/heart.png", matched: false },
-  { img: "images/medal.png", matched: false },
+  //{ img: "images/football.png", matched: false },
+  //{ img: "images/futbol.png", matched: false },
+  //{ img: "images/heart.png", matched: false },
+  //{ img: "images/medal.png", matched: false },
   { img: "images/motocycle.png", matched: false },
   { img: "images/swimming-person.png", matched: false },
 ];
@@ -119,3 +119,39 @@ function checkForWin() {
   return matchedCards.length === board.length;
 }
 
+function startTimer() {
+  let timeLeft = GAME_DURATION;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    timerEl.innerHTML = `Time Left: ${timeLeft}s`;
+    if (timeLeft === 0 || checkForWin()) {
+      clearInterval(timer);
+      if (timeLeft === 0) {
+        messageEl.innerHTML = "Time's up! You lose.";
+        gamerOver = true;
+        renderControls();
+      } else {
+        messageEl.innerHTML = "Congratulations! You win.";
+        gamerOver = true;
+      }
+    }
+    if (timeLeft === 0) {
+      clearInterval(timer);
+    }
+  }, 1000);
+}
+
+function render() {
+  renderBoard();
+  // renderMessage();
+  renderControls();
+}
+
+function renderControls() {
+  if (gamerOver) {
+    resetBtn.style.visibility = "visible";
+  } else {
+    resetBtn.style.visibility = "hidden";
+  }
+}
