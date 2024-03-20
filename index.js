@@ -1,24 +1,27 @@
 /*----- constants -----*/
 const SOURCE_CARDS = [
-  {icon :"fa-volleyball", matched: false},
-  {icon :"fa-dumbbell", matched: false},
-  {icon :"fa-person-swimming", matched: false},
-  {icon :"fa-futbol", matched: false},
-  {icon :"fa-basketball", matched: false},
-  {icon :"fa-football", matched: false},
-  {icon :"fa-bowling-ball", matched: false},
-  {icon :"fa-medal", matched: false},
-  {icon :"fa-motorcycle", matched: false},
-  {icon :"fa-heart", matched: false},
+  { img: "images/baseball.png", matched: false },
+  { img: "images/basketball.png", matched: false },
+  { img: "images/bowlingball.png", matched: false },
+  { img: "images/dumbbell.png", matched: false },
+  { img: "images/football.png", matched: false },
+  { img: "images/futbol.png", matched: false },
+  { img: "images/heart.png", matched: false },
+  { img: "images/medal.png", matched: false },
+  { img: "images/motocycle.png", matched: false },
+  { img: "images/swimming-person.png", matched: false },
 ];
+const CARD_BACK = "images/question.png";
 
-const CARD_BACK = "fa-question";
+const GAME_DURATION = 80; // seconds
+
 /*----- state variables -----*/
-let board;
-let firstCard;
+let board; 
+let firstCard; 
 let secondCard;
-let lockBoard;
-let timer;
+let ignoreClick;
+let gamerOver;
+let timer; //time remaining
 
 /*----- cached elements  -----*/
 const boardEl = document.getElementById("board");
@@ -27,38 +30,78 @@ const timerEl = document.getElementById("timer");
 const resetBtn = document.getElementById("reset");
 
 /*----- event listeners -----*/
-resetBtn.addEventListener("click", init);
-boardEl.addEventListener("click", handleClick);
+boardEl.addEventListener("click", handleClick)
+resetBtn.addEventListener("click", init)
+
 
 /*----- functions -----*/
-init();
 
+init();
 function init() {
-  board = shuffledCards(SOURCE_CARDS);
+  board = ShuffledCards();
   firstCard = null;
   secondCard = null;
-  lockBoard = false;
-  timer = 0;
-  messageEl.innerHTML = "";
-  lockBoard = false;
+  ignoreClick = false;
+  gamerOver = false;
+  messageEl.innerHTML = '';
+  startTimer();
   render();
 }
-// Shuffle array in place using Fisher–Yates algorithm and duplicate the source card array
-function shuffledCards(array) {
-  let currentIndex = array.length, temporaryValue, randomIndex;
-  // While there remain elements to shuffle...
-  while (0 !== currentIndex) {
-    // Pick a remaining element...
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-    // And swap it with the current element.
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
+
+function ShuffledCards() {
+  let tempCards = []
+  let cards = []
+  for (let card of SOURCE_CARDS){
+    tempCards.push({...card}, {...card})
   }
-  return array.concat(array);
+  while (tempCards.length) {
+    let randomIndex = Math.floor(Math.random() * tempCards.length);
+    let card = tempCards.splice(randomIndex, 1)[0];
+    cards.push(card);
+  }
+  return cards;
 }
-  
 
+function handleClick(e){
+  const cardIdx = parseInt(e.target.id);
+  if (gamerOver || isNaN(cardIdx) || ignoreClick) return;
 
+  const card = board[cardIdx];
+
+  if (!firstCard) {
+    firstCard = card;
+    render();
+    return;
+  }
+
+  if (firstCard === card) {
+    firstCard = null;
+    render();
+    return;
+  }
+
+  if (firstCard.img === card.img) {
+    firstCard.matched = true;
+    card.matched = true;
+    firstCard = null;
+    messageEl.innerHTML = "Let's go!"; // Display message for match
+    render();
+    setTimeout(() => {
+      messageEl.innerHTML = ""; // Clear the message
+      render();
+    }, 1000);
+  } else {
+    ignoreClick = true;
+    setTimeout(() => {
+      messageEl.innerHTML = "wrong, Try again!"; // Display message for wrong match
+      render(); // Render the board to show the wrong message
+    }, 500); // Adjust this delay as needed
+    setTimeout(() => {
+      messageEl.innerHTML = ""; // Clear the message
+      firstCard = null;
+      ignoreClick = false;
+      render();
+    }, 1500); // Adjust this delay as needed
+  }
+}
 
