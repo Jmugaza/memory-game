@@ -4,10 +4,10 @@ const SOURCE_CARDS = [
   { img: "images/basketball.png", matched: false },
   { img: "images/bowlingball.png", matched: false },
   { img: "images/dumbbell.png", matched: false },
-  //{ img: "images/football.png", matched: false },
-  //{ img: "images/futbol.png", matched: false },
-  //{ img: "images/heart.png", matched: false },
-  //{ img: "images/medal.png", matched: false },
+  { img: "images/football.png", matched: false },
+  { img: "images/futbol.png", matched: false },
+  { img: "images/heart.png", matched: false },
+  { img: "images/medal.png", matched: false },
   { img: "images/motocycle.png", matched: false },
   { img: "images/swimming-person.png", matched: false },
 ];
@@ -20,7 +20,7 @@ let board;
 let firstCard;
 let secondCard;
 let ignoreClick;
-let gamerOver;
+let gameOver;
 let timer; //time remaining
 
 /*----- cached elements  -----*/
@@ -41,7 +41,7 @@ function init() {
   firstCard = null;
   secondCard = null;
   ignoreClick = false;
-  gamerOver = false;
+  gameOver = false;
   messageEl.innerHTML = "";
   startTimer();
   render();
@@ -61,64 +61,6 @@ function ShuffledCards() {
   return cards;
 }
 
-function handleClick(e) {
-  const cardIdx = parseInt(e.target.id);
-  if (gamerOver || isNaN(cardIdx) || ignoreClick) return;
-
-  const card = board[cardIdx];
-
-  if (!firstCard) {
-    firstCard = card;
-    render();
-    return;
-  }
-
-  if (firstCard === card) {
-    firstCard = null;
-    render();
-    return;
-  }
-
-  if (firstCard.img === card.img) {
-    firstCard.matched = true;
-    card.matched = true;
-    firstCard = null;
-    messageEl.innerHTML = "Let's go!"; // Display message for match
-    render();
-    setTimeout(() => {
-      messageEl.innerHTML = ""; // Clear the message
-      render();
-    }, 1000);
-  } else {
-    ignoreClick = true;
-    setTimeout(() => {
-      messageEl.innerHTML = "wrong, Try again!"; // Display message for wrong match
-      render(); // Render the board to show the wrong message
-    }, 500); // Adjust this delay as needed
-    setTimeout(() => {
-      messageEl.innerHTML = ""; // Clear the message
-      firstCard = null;
-      ignoreClick = false;
-      render();
-    }, 1500); // Adjust this delay as needed
-  }
-}
-
-function renderBoard() {
-  board.forEach((card, index) => {
-    const cardEl = document.getElementById(index);
-    cardEl.src = card.img;
-    const src =
-      card.matched || card === firstCard || secondCard ? card.img : CARD_BACK;
-    cardEl.src = src;
-  });
-}
-
-function checkForWin() {
-  let matchedCards = board.filter((card) => card.matched);
-  return matchedCards.length === board.length;
-}
-
 function startTimer() {
   let timeLeft = GAME_DURATION;
 
@@ -129,11 +71,11 @@ function startTimer() {
       clearInterval(timer);
       if (timeLeft === 0) {
         messageEl.innerHTML = "Time's up! You lose.";
-        gamerOver = true;
+        gameOver = true;
         renderControls();
       } else {
         messageEl.innerHTML = "Congratulations! You win.";
-        gamerOver = true;
+        gameOver = true;
       }
     }
     if (timeLeft === 0) {
@@ -142,6 +84,77 @@ function startTimer() {
   }, 1000);
 }
 
+function handleClick(e) {
+  const cardIdx = parseInt(e.target.id);
+  if (gameOver || isNaN(cardIdx) || ignoreClick) return;
+
+  const card = board[cardIdx];
+
+  if (!firstCard) {
+    firstCard = card;
+    render();
+    return;
+  }
+
+  if (!secondCard) {
+    secondCard = card;
+    render(); 
+
+    if (firstCard.img === secondCard.img) {
+      firstCard.matched = true;
+      secondCard.matched = true;
+      firstCard = null;
+      secondCard = null;
+
+      messageEl.innerHTML = "Let's go!";
+      setTimeout(() => {
+        messageEl.innerHTML = "";
+        render();
+      }, 1000);
+    } else {
+      ignoreClick = true;
+      messageEl.innerHTML = "wrong, Try again!";
+      render();
+      setTimeout(() => {
+        firstCard.matched = false;
+        secondCard.matched = false;
+        firstCard = null;
+        secondCard = null;
+        ignoreClick = false;
+        render();
+        messageEl.innerHTML = "";
+      }, 1500);
+    }
+    return;
+  }
+
+  if (firstCard === card || secondCard === card) {
+    firstCard = null;
+    secondCard = null;
+    render();
+    return;
+  }
+}
+
+function renderBoard() {
+  board.forEach((card, index) => {
+    const cardEl = document.getElementById(index);
+    cardEl.src = card.img;
+    const src =
+      card.matched || card === firstCard || card === secondCard
+        ? card.img
+        : CARD_BACK;
+    cardEl.src = src;
+  });
+}
+
+function checkForWin() {
+  let matchedCards = board.filter((card) => card.matched);
+  return matchedCards.length === board.length;
+}
+
+
+
 function render() {
   renderBoard();
   // renderMessage();
@@ -149,7 +162,7 @@ function render() {
 }
 
 function renderControls() {
-  if (gamerOver) {
+  if (gameOver) {
     resetBtn.style.visibility = "visible";
   } else {
     resetBtn.style.visibility = "hidden";
