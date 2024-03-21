@@ -67,23 +67,16 @@ function startTimer() {
   timer = setInterval(() => {
     timeLeft--;
     timerEl.innerHTML = `Time Left: ${timeLeft}s`;
+
     if (timeLeft === 0 || checkForWin()) {
       clearInterval(timer);
-      if (timeLeft === 0) {
-        messageEl.innerHTML = "Time's up! You lose.";
-        gameOver = true;
-        renderControls();
-      } else {
-        messageEl.innerHTML = "Congratulations! You win.";
-        gameOver = true;
-      }
-    }
-    if (timeLeft === 0) {
-      clearInterval(timer);
+      gameOver = true;
+      render();
     }
   }, 1000);
 }
 
+// Handle card click
 function handleClick(e) {
   const cardIdx = parseInt(e.target.id);
   if (gameOver || isNaN(cardIdx) || ignoreClick) return;
@@ -92,47 +85,54 @@ function handleClick(e) {
 
   if (!firstCard) {
     firstCard = card;
-    render();
-    return;
-  }
-
-  if (!secondCard) {
+  } else if (!secondCard) {
     secondCard = card;
-    render(); 
+    checkMatch();
+  } else {
+    //resetSelection();
+    firstCard  = null;
+    secondCard = null;
+    firstCard = card;
+  }
+  render();
+}
 
-    if (firstCard.img === secondCard.img) {
-      firstCard.matched = true;
-      secondCard.matched = true;
+// Check if the selected cards match
+function checkMatch() {
+  if (firstCard.img === secondCard.img) {
+    firstCard.matched = true;
+    secondCard.matched = true;
+    messageEl.innerHTML = "Let's go!";
+    setTimeout(() => {
+      messageEl.innerHTML = "";
+      render();
+    }, 1000);
+  } else {
+    ignoreClick = true;
+    messageEl.innerHTML = "Wrong, Try again!";
+    setTimeout(() => {
+      //resetSelection();
       firstCard = null;
       secondCard = null;
-
-      messageEl.innerHTML = "Let's go!";
-      setTimeout(() => {
-        messageEl.innerHTML = "";
-        render();
-      }, 1000);
-    } else {
-      ignoreClick = true;
-      messageEl.innerHTML = "wrong, Try again!";
+      ignoreClick = false;
       render();
-      setTimeout(() => {
-        firstCard.matched = false;
-        secondCard.matched = false;
-        firstCard = null;
-        secondCard = null;
-        ignoreClick = false;
-        render();
-        messageEl.innerHTML = "";
-      }, 1500);
-    }
-    return;
+      messageEl.innerHTML = "";
+    }, 1000);
   }
+}
 
-  if (firstCard === card || secondCard === card) {
-    firstCard = null;
-    secondCard = null;
-    render();
-    return;
+function checkForWin() {
+  let matchedCards = board.filter((card) => card.matched);
+  return matchedCards.length === board.length;
+}
+
+function renderMessage() {
+  if (gameOver) {
+    if (checkForWin()) {
+      messageEl.innerHTML = "Congratulations! You win.";
+    } else {
+      messageEl.innerHTML = "Time's up! You lost.";
+    }
   }
 }
 
@@ -148,16 +148,9 @@ function renderBoard() {
   });
 }
 
-function checkForWin() {
-  let matchedCards = board.filter((card) => card.matched);
-  return matchedCards.length === board.length;
-}
-
-
-
 function render() {
   renderBoard();
-  // renderMessage();
+  renderMessage();
   renderControls();
 }
 
@@ -167,4 +160,11 @@ function renderControls() {
   } else {
     resetBtn.style.visibility = "hidden";
   }
+}
+
+// Reset selected cards
+function resetSelection() {
+  firstCard = null;
+  secondCard = null;
+  ignoreClick = false;
 }

@@ -42,7 +42,7 @@ The game starts with a grid of facedown cards. Clicking on a card flips it over 
 - Handle click: Create a function to handle a click on a card. When the user clicks on a card, it flips over and displays its icon.
 - Check for winner: Create a function to check if the player has won the game.
 - Render message: Create a function to render messages to the user if they win or lose.
-- Render controls: Create a function to render controls based on the game state (e.g., reset button visibility).
+- Render controls: Create a function to render controls based on the game state (for the reset button visibility).
 - Render: Create a function to render the game board and controls.
 
 ## How to Play
