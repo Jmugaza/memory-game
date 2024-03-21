@@ -89,7 +89,6 @@ function handleClick(e) {
     secondCard = card;
     checkMatch();
   } else {
-    //resetSelection();
     firstCard  = null;
     secondCard = null;
     firstCard = card;
@@ -111,7 +110,6 @@ function checkMatch() {
     ignoreClick = true;
     messageEl.innerHTML = "Wrong, Try again!";
     setTimeout(() => {
-      //resetSelection();
       firstCard = null;
       secondCard = null;
       ignoreClick = false;
