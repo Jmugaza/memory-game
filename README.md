@@ -52,3 +52,5 @@ The game starts with a grid of facedown cards. Clicking on a card flips it over 
 3. Keep flipping cards until all pairs are found.
 
 
+## live project
+[Memory Game](https://jmugaza.github.io/memory-game/)
