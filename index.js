@@ -34,8 +34,9 @@ boardEl.addEventListener("click", handleClick);
 resetBtn.addEventListener("click", init);
 
 /*----- functions -----*/
-
 init();
+
+//Initialize the game by creating a new board with shuffled cards
 function init() {
   board = ShuffledCards();
   firstCard = null;
@@ -47,6 +48,7 @@ function init() {
   render();
 }
 
+// Function to shuffle a given array of card objects
 function ShuffledCards() {
   let tempCards = [];
   let cards = [];
@@ -55,12 +57,15 @@ function ShuffledCards() {
   }
   while (tempCards.length) {
     let randomIndex = Math.floor(Math.random() * tempCards.length);
+
+    // Remove and store the card object at the randomly generated index
     let card = tempCards.splice(randomIndex, 1)[0];
     cards.push(card);
   }
   return cards;
 }
 
+// Function to start the game timer
 function startTimer() {
   let timeLeft = GAME_DURATION;
 
@@ -68,6 +73,7 @@ function startTimer() {
     timeLeft--;
     timerEl.innerHTML = `Time Left: ${timeLeft}s`;
 
+    // Check if the time left is 0 or if the user has won
     if (timeLeft === 0 || checkForWin()) {
       clearInterval(timer);
       gameOver = true;
@@ -76,7 +82,8 @@ function startTimer() {
   }, 1000);
 }
 
-// Handle card click
+
+// Handles the click event on a card in the game board
 function handleClick(e) {
   const cardIdx = parseInt(e.target.id);
   if (gameOver || isNaN(cardIdx) || ignoreClick) return;
@@ -119,11 +126,14 @@ function checkMatch() {
   }
 }
 
+
+// Check if the player has won the game
 function checkForWin() {
   let matchedCards = board.filter((card) => card.matched);
   return matchedCards.length === board.length;
 }
 
+// This function used to display a message to the user
 function renderMessage() {
   if (gameOver) {
     if (checkForWin()) {
@@ -134,10 +144,14 @@ function renderMessage() {
   }
 }
 
+
+// renderBoard function iterates through each card in the board array and updates the corresponding DOM element with the card's image.
 function renderBoard() {
   board.forEach((card, index) => {
     const cardEl = document.getElementById(index);
     cardEl.src = card.img;
+
+    // Determine the source for the card's image based on whether it has been matched or is currently being compared
     const src =
       card.matched || card === firstCard || card === secondCard
         ? card.img
@@ -146,11 +160,13 @@ function renderBoard() {
   });
 }
 
+
 function render() {
   renderBoard();
   renderMessage();
   renderControls();
 }
+
 
 function renderControls() {
   if (gameOver) {
@@ -158,11 +174,4 @@ function renderControls() {
   } else {
     resetBtn.style.visibility = "hidden";
   }
-}
-
-// Reset selected cards
-function resetSelection() {
-  firstCard = null;
-  secondCard = null;
-  ignoreClick = false;
 }
