@@ -11,6 +11,7 @@ const SOURCE_CARDS = [
   { img: "images/motocycle.png", matched: false },
   { img: "images/swimming-person.png", matched: false },
 ];
+
 const CARD_BACK = "images/question.png";
 
 const GAME_DURATION = 80; // seconds
@@ -82,7 +83,6 @@ function startTimer() {
   }, 1000);
 }
 
-
 // Handles the click event on a card in the game board
 function handleClick(e) {
   const cardIdx = parseInt(e.target.id);
@@ -126,7 +126,6 @@ function checkMatch() {
   }
 }
 
-
 // Check if the player has won the game
 function checkForWin() {
   let matchedCards = board.filter((card) => card.matched);
@@ -144,7 +143,6 @@ function renderMessage() {
   }
 }
 
-
 // renderBoard function iterates through each card in the board array and updates the corresponding DOM element with the card's image.
 function renderBoard() {
   board.forEach((card, index) => {
@@ -160,13 +158,11 @@ function renderBoard() {
   });
 }
 
-
 function render() {
   renderBoard();
   renderMessage();
   renderControls();
 }
-
 
 function renderControls() {
   if (gameOver) {
