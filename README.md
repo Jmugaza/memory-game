@@ -1,7 +1,7 @@
 # Memory Matching Game
 
-<img src="wireframe/wireframe.png" alt="Game wireframe" width="300">
-<img src="wireframe/onClick.png" alt="Icons for when card is flipped" width="300">
+<img src="wireframe/memory-game.png" alt="Game wireframe" width="300">
+
 
 
 ## Description
