@@ -8,9 +8,13 @@
 
 This is a memory matching game implemented using HTML, CSS, and JavaScript. Players need to find pairs of matching cards by flipping them over. The game has Font Awesome icons for card symbols and Figma for the design inspiration and wireframing.
 
-## Gameplay
+## Technology used:
+- JavaScript
+- HTML
+- CSS
+- Figma (wireframing)
 
-The game starts with a grid of facedown cards. Clicking on a card flips it over to reveal the symbol underneath. Players need to remember the positions of the symbols and find matching pairs by flipping over two cards at a time. If the symbols match, the cards remain face-up. If not, the cards are flipped back face-down, and the player continues until all pairs are found.
+
 
 ## Sudo code
 
